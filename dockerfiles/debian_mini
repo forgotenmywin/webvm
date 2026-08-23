@@ -45,4 +45,5 @@ ENV HOME="/home/user" \
     EDITOR="vim" \
     LANG="C.UTF-8"
 
+USER root
 CMD ["/bin/bash"]
