@@ -28,6 +28,10 @@ RUN useradd -m -s /bin/bash user && \
 RUN echo "user ALL=(ALL:ALL) ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
+# Fake sudo for WebVM (setuid not supported in CheerpX)
+RUN printf '#!/bin/sh\nexec "$@"\n' > /usr/local/bin/sudo && \
+    chmod +x /usr/local/bin/sudo
+
 COPY --chown=user:user ./examples /home/user/examples
 
 RUN chmod -R +x /home/user/examples/lua
