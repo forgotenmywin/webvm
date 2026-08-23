@@ -6,8 +6,7 @@ RUN echo "deb [trusted=yes] http://archive.debian.org/debian buster main contrib
   echo "deb [trusted=yes] http://archive.debian.org/debian-security buster/updates main" \
   >> /etc/apt/sources.list
 
-RUN apt-get clean && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get -y upgrade
 
 RUN apt-get -y install \
@@ -17,15 +16,13 @@ RUN apt-get -y install \
     patch wamerican ucf manpages \
     file luajit make lua5.3 dialog curl \
     less cowsay netcat-openbsd \
-    wget tar policykit-1 sudo
+    wget tar policykit-1
 
-RUN useradd -m -s /bin/bash user && \
-    echo "user:password" | chpasswd && \
-    echo "root:password" | chpasswd
+RUN echo "root:password" | chpasswd
 
-COPY --chown=user:user ./examples /home/user/examples
+COPY ./examples /root/examples
 
-RUN chmod -R +x /home/user/examples/lua
+RUN chmod -R +x /root/examples/lua
 
 WORKDIR /root/
 
