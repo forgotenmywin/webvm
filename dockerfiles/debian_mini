@@ -8,42 +8,37 @@ RUN echo "deb [trusted=yes] http://archive.debian.org/debian buster main contrib
   >> /etc/apt/sources.list
 
 RUN apt-get clean && \
-  apt-get update && \
-  apt-get -y upgrade
+    apt-get update && \
+    apt-get -y upgrade
 
 RUN apt-get -y install \
-  apt-utils gcc \
-  python3 vim unzip ruby nodejs \
-  fakeroot dbus base whiptail hexedit \
-  patch wamerican ucf manpages \
-  file luajit make lua5.3 dialog curl \
-  less cowsay netcat-openbsd \
-  wget tar policykit-1 sudo
+    apt-utils gcc \
+    python3 vim unzip ruby nodejs \
+    fakeroot dbus base whiptail hexedit \
+    patch wamerican ucf manpages \
+    file luajit make lua5.3 dialog curl \
+    less cowsay netcat-openbsd \
+    wget tar policykit-1 sudo
 
-# Create normal user
 RUN useradd -m -s /bin/bash user && \
-  echo "user:password" | chpasswd
+    echo "user:password" | chpasswd && \
+    echo "root:password" | chpasswd
 
-# Give user sudo permission
-RUN usermod -aG sudo user && \
-  echo "user ALL=(ALL:ALL) ALL" > /etc/sudoers.d/user && \
-  chmod 0440 /etc/sudoers.d/user
+# Allow user to use sudo
+RUN echo "user ALL=(ALL:ALL) ALL" > /etc/sudoers.d/user && \
+    chmod 0440 /etc/sudoers.d/user
 
 COPY --chown=user:user ./examples /home/user/examples
 
 RUN chmod -R +x /home/user/examples/lua
 
-# We set WORKDIR, as this gets extracted by Webvm to be used as the cwd.
 WORKDIR /home/user/
 
-# We set env, as this gets extracted by Webvm.
 ENV HOME="/home/user" \
     TERM="xterm" \
     USER="user" \
     SHELL="/bin/bash" \
     EDITOR="vim" \
     LANG="C.UTF-8"
-
-RUN echo 'root:password' | chpasswd
 
 CMD ["/bin/bash"]
