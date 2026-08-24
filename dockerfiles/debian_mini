@@ -35,4 +35,6 @@ ENV HOME="/home/user" \
     EDITOR="vim" \
     LANG="C.UTF-8"
 
+RUN apt-get update
+
 CMD ["/bin/bash"]
