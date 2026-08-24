@@ -334,16 +334,23 @@
 	onMount(initTerminal);
 	async function handleConnect()
 	{
-		const w = window.open("login.html", "_blank");
-		cx.networkLogin();
-		try
+		if(networkInterface.authKey)
 		{
-			w.location.href = await startLogin();
+			cx.networkLogin();
 		}
-		catch(e)
+		else
 		{
-			w.close();
-			console.warn(e);
+			const w = window.open("login.html", "_blank");
+			cx.networkLogin();
+			try
+			{
+				w.location.href = await startLogin();
+			}
+			catch(e)
+			{
+				w.close();
+				console.warn(e);
+			}
 		}
 	}
 	async function handleReset()
