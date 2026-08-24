@@ -18,20 +18,21 @@ RUN apt-get -y install \
     less cowsay netcat-openbsd \
     wget tar policykit-1
 
-RUN echo "root:password" | chpasswd
+RUN useradd -m -s /bin/bash user && \
+    echo "user:password" | chpasswd && \
+    echo "root:password" | chpasswd
 
-COPY ./examples /root/examples
+COPY --chown=user:user ./examples /home/user/examples
 
-RUN chmod -R +x /root/examples/lua
+RUN chmod -R +x /home/user/examples/lua
 
-WORKDIR /root/
+WORKDIR /home/user/
 
-ENV HOME="/root" \
+ENV HOME="/home/user" \
     TERM="xterm" \
-    USER="root" \
+    USER="user" \
     SHELL="/bin/bash" \
     EDITOR="vim" \
     LANG="C.UTF-8"
 
-USER root
 CMD ["/bin/bash"]
