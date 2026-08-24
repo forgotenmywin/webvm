@@ -313,6 +313,13 @@
 			printMessage([e.toString()]);
 			return;
 		}
+
+		// Auto-connect if authKey is present
+		if(networkInterface.authKey)
+		{
+			cx.networkLogin();
+		}
+
 		cx.registerCallback("cpuActivity", cpuCallback);
 		cx.registerCallback("diskActivity", hddCallback);
 		cx.registerCallback("diskLatency", latencyCallback);
