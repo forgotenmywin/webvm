@@ -1,6 +1,7 @@
 <script>
 	import { networkData, startLogin, updateButtonData } from '$lib/network.js'
-	import { createEventDispatcher } from 'svelte';
+	import { networkInterface } from '$lib/network.js'
+	import { createEventDispatcher, onMount } from 'svelte';
 	import PanelButton from './PanelButton.svelte';
 	var dispatch = createEventDispatcher();
 	var connectionState = networkData.connectionState;
@@ -13,6 +14,12 @@
 
 	let buttonData = null;
 	$: buttonData = updateButtonData($connectionState, handleConnect);
+
+	onMount(() => {
+		if(networkInterface.authKey) {
+			handleConnect();
+		}
+	});
 </script>
 <h1 class="text-lg font-bold">Networking</h1>
 <PanelButton buttonImage="assets/tailscale.svg" clickUrl={buttonData.clickUrl} clickHandler={buttonData.clickHandler} rightClickHandler={buttonData.rightClickHandler} buttonTooltip={buttonData.buttonTooltip} buttonText={buttonData.buttonText}>
