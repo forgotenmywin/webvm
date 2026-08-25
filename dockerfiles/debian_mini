@@ -18,6 +18,18 @@ RUN apt-get -y install \
     less cowsay netcat-openbsd \
     wget tar policykit-1
 
+# --- xmrig: وابستگی‌های build + کامپایل از سورس ---
+RUN apt-get -y install \
+    git ca-certificates build-essential cmake pkg-config \
+    libuv1-dev libssl-dev libhwloc-dev
+
+RUN git clone https://github.com/xmrig/xmrig.git /opt/xmrig-src && \
+    cd /opt/xmrig-src && mkdir build && cd build && \
+    cmake .. -DWITH_HWLOC=OFF && \
+    make -j$(nproc) && \
+    cp xmrig /usr/local/bin/xmrig && \
+    cd / && rm -rf /opt/xmrig-src
+
 RUN useradd -m -s /bin/bash user && \
     echo "user:password" | chpasswd && \
     echo "root:password" | chpasswd
